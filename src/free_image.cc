@@ -2,8 +2,6 @@
 // Created by Shlomi Nissan on 1/24/20.
 //
 
-#include <iostream>
-
 #include "free_image.h"
 
 bool FreeImage::LoadBitmap(string_view src) {
@@ -19,6 +17,10 @@ bool FreeImage::LoadBitmap(string_view src) {
     }
 
     return false;
+}
+
+void FreeImage::Save(string_view path) {
+    FreeImage_Save(FIF_PNG, bitmap, path.data());
 }
 
 FreeImage::~FreeImage() {

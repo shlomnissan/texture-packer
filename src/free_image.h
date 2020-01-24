@@ -2,8 +2,8 @@
 // Created by Shlomi Nissan on 1/24/20.
 //
 
-#ifndef TEXTURE_PACKER_FREE_IMAGE_H_
-#define TEXTURE_PACKER_FREE_IMAGE_H_
+#ifndef SRC_FREE_IMAGE_H_
+#define SRC_FREE_IMAGE_H_
 
 #include <string>
 #include <string_view>
@@ -22,6 +22,7 @@ public:
     const char* src() const { return path.c_str(); }
 
     bool LoadBitmap(string_view path);
+    void Save(string_view path);
 
     ~FreeImage();
 private:
@@ -31,4 +32,4 @@ private:
     unsigned h;
 };
 
-#endif //TEXTURE_PACKER_FREE_IMAGE_H_
+#endif  // SRC_FREE_IMAGE_H_
