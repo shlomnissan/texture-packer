@@ -1,13 +1,10 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.10.2)
 project(texture_packer)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
-set(FREEIMAGE_INCLUDE_DIR /usr/local/Cellar/freeimage/3.18.0/include)
-set(FREEIMAGE_LIBRARY /usr/local/Cellar/freeimage/3.18.0/lib/libfreeimage.a)
+set(FREEIMAGE_LIBRARY /usr/lib/x86_64-linux-gnu/libfreeimage.so)
 
-include_directories(${FREEIMAGE_INCLUDE_DIR})
-
-add_executable(texture_packer src/main.cpp src/free_image.cc src/free_image.h)
+add_executable(texture_packer src/main.cpp src/bitmap.cc src/bitmap.h)
 
 target_link_libraries(texture_packer ${FREEIMAGE_LIBRARY})

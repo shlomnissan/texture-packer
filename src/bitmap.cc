@@ -2,9 +2,14 @@
 // Created by Shlomi Nissan on 1/24/20.
 //
 
-#include "free_image.h"
+#include "bitmap.h"
 
-bool FreeImage::LoadBitmap(string_view src) {
+Bitmap::Bitmap(string_view source) : path(source.data()) {
+    // TODO: throw if file doesn't exist
+    // std::filesystem::exists("helloworld.txt");
+}
+
+bool Bitmap::LoadBitmap(string_view src) {
     path = src;
 
     FREE_IMAGE_FORMAT fif { FreeImage_GetFIFFromFilename(path.data()) };
@@ -19,11 +24,11 @@ bool FreeImage::LoadBitmap(string_view src) {
     return false;
 }
 
-void FreeImage::Save(string_view path) {
+void Bitmap::Save(string_view path) {
     FreeImage_Save(FIF_PNG, bitmap, path.data());
 }
 
-FreeImage::~FreeImage() {
+Bitmap::~Bitmap() {
     if (!bitmap) return;
 
     FreeImage_Unload(bitmap);

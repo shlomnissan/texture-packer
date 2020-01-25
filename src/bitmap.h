@@ -2,8 +2,8 @@
 // Created by Shlomi Nissan on 1/24/20.
 //
 
-#ifndef SRC_FREE_IMAGE_H_
-#define SRC_FREE_IMAGE_H_
+#ifndef SRC_BITMAP_H_
+#define SRC_BITMAP_H_
 
 #include <string>
 #include <string_view>
@@ -13,9 +13,9 @@
 using std::string;
 using std::string_view;
 
-class FreeImage {
+class Bitmap {
 public:
-    FreeImage(): bitmap(nullptr), path(""), w(0), h(0) {}
+    Bitmap(string_view source);
 
     unsigned width() const { return w; }
     unsigned height() const { return h; }
@@ -24,12 +24,14 @@ public:
     bool LoadBitmap(string_view path);
     void Save(string_view path);
 
-    ~FreeImage();
+    ~Bitmap();
 private:
-    FIBITMAP* bitmap;
+    unsigned w { 0 };
+    unsigned h { 0 };
+
     string path;
-    unsigned w;
-    unsigned h;
+
+    FIBITMAP* bitmap { nullptr };
 };
 
-#endif  // SRC_FREE_IMAGE_H_
+#endif  // SRC_BITMAP_H_
