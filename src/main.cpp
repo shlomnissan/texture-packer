@@ -5,28 +5,32 @@
 #include <iostream>
 #include <string>
 
-#include "bitmap.h"
+#include "packer.h"
 
 void show_tip() {
-    std::cout << "[Usage]\n" << "\ttexture_packer FILE_LIST [-o output file]\n";
+    std::cout << "[Usage]\n"
+              << "\ttexture_packer FILE_LIST [-o output file]\n";
 }
 
 void process_arguments(int argc, char* argv[]) {
-    std::string filename { "spritesheet" };
     bool failed = false;
+    std::string filename { "spritesheet" };  // default filename
+    Packer packer;
 
     for (int i = 0; i < argc; ++i) {
         auto value = argv[i];
         if (value[0] == '-') {
             switch(std::tolower(value[1])) {
                 case 'o':
+                    // override filename
                     filename = argv[++i];
                     break;
             }
         } else {
             try {
+                // create bitmaps and move them to the packer
                 Bitmap bitmap { argv[i] };
-                // TODO: move bitmap to packer
+                packer.AddBitmap(std::move(bitmap));
             } catch (std::runtime_error& e) {
                 failed = true;
                 std::cerr << e.what() << '\n';
@@ -39,7 +43,15 @@ void process_arguments(int argc, char* argv[]) {
         return;
     }
 
-    // TODO: check that more than one bitmap is selected
+    if (packer.size() == 0) {
+        std::cerr << "No textures to pack\n\n";
+        show_tip();
+        return;
+    }
+
+    // TODO: start packing
+
+    // TODO: packer export
 }
 
 int main(int argc, char* argv[]) {

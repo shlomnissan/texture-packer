@@ -7,6 +7,6 @@ set(FREEIMAGE_LIBRARY /usr/lib/x86_64-linux-gnu/libfreeimage.so)
 
 link_libraries(stdc++fs)
 
-add_executable(texture_packer src/main.cpp src/bitmap.cc src/bitmap.h)
+add_executable(texture_packer src/main.cpp src/bitmap.cc src/bitmap.h src/packer.cc src/packer.h)
 
 target_link_libraries(texture_packer ${FREEIMAGE_LIBRARY})

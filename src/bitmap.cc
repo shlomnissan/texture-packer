@@ -4,6 +4,8 @@
 
 #include "bitmap.h"
 
+#include <iostream>
+
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
 
@@ -12,6 +14,17 @@ Bitmap::Bitmap(string_view source) : path(source.data()) {
         throw std::runtime_error("Can't open file " + path);
     }
     LoadBitmap(path);
+}
+
+Bitmap::Bitmap(Bitmap &&rhs) {
+    bitmap = rhs.bitmap;
+    path = rhs.path;
+    w = rhs.w;
+    h = rhs.h;
+
+    rhs.bitmap = nullptr;
+    rhs.path = "";
+    rhs.w = 0; rhs.h = 0;
 }
 
 bool Bitmap::LoadBitmap(string_view src) {

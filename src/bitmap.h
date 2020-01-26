@@ -16,6 +16,11 @@ using std::string_view;
 class Bitmap {
 public:
     Bitmap(string_view source);
+    Bitmap(Bitmap&& rhs);
+
+    Bitmap(const Bitmap& rhs) = delete;
+    Bitmap& operator=(const Bitmap& rhs) = delete;
+    Bitmap& operator=(Bitmap&& rhs) = delete;
 
     unsigned width() const { return w; }
     unsigned height() const { return h; }
