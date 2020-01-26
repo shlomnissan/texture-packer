@@ -5,6 +5,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(FREEIMAGE_LIBRARY /usr/lib/x86_64-linux-gnu/libfreeimage.so)
 
+link_libraries(stdc++fs)
+
 add_executable(texture_packer src/main.cpp src/bitmap.cc src/bitmap.h)
 
 target_link_libraries(texture_packer ${FREEIMAGE_LIBRARY})

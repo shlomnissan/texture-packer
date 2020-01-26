@@ -4,9 +4,14 @@
 
 #include "bitmap.h"
 
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+
 Bitmap::Bitmap(string_view source) : path(source.data()) {
-    // TODO: throw if file doesn't exist
-    // std::filesystem::exists("helloworld.txt");
+    if (!fs::exists(path)) {
+        throw std::runtime_error("Can't open file " + path);
+    }
+    LoadBitmap(path);
 }
 
 bool Bitmap::LoadBitmap(string_view src) {
