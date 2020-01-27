@@ -4,9 +4,10 @@
 
 #include "bitmap.h"
 
+#include <experimental/filesystem>
+
 #include <iostream>
 
-#include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
 
 Bitmap::Bitmap(string_view source) : path(source.data()) {
@@ -19,12 +20,27 @@ Bitmap::Bitmap(string_view source) : path(source.data()) {
 Bitmap::Bitmap(Bitmap &&rhs) {
     bitmap = rhs.bitmap;
     path = rhs.path;
-    w = rhs.w;
-    h = rhs.h;
+    width = rhs.width;
+    height = rhs.height;
 
     rhs.bitmap = nullptr;
     rhs.path = "";
-    rhs.w = 0; rhs.h = 0;
+    rhs.width = 0; rhs.height = 0;
+}
+
+Bitmap &Bitmap::operator=(Bitmap &&rhs) {
+    if (this != &rhs) {
+        FreeImage_Unload(bitmap);
+        bitmap = rhs.bitmap;
+        path = rhs.path;
+        width = rhs.width;
+        height = rhs.height;
+
+        rhs.bitmap = nullptr;
+        rhs.path = "";
+        rhs.width = 0; rhs.height = 0;
+    }
+    return *this;
 }
 
 bool Bitmap::LoadBitmap(string_view src) {
@@ -33,8 +49,8 @@ bool Bitmap::LoadBitmap(string_view src) {
     FREE_IMAGE_FORMAT fif { FreeImage_GetFIFFromFilename(path.data()) };
     if (fif != FIF_UNKNOWN) {
         bitmap = FreeImage_Load(fif, path.data());
-        w = FreeImage_GetWidth(bitmap);
-        h = FreeImage_GetHeight(bitmap);
+        width = FreeImage_GetWidth(bitmap);
+        height = FreeImage_GetHeight(bitmap);
 
         return true;
     }

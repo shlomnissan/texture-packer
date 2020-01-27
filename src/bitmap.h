@@ -7,6 +7,7 @@
 
 #include <string>
 #include <string_view>
+#include <algorithm>
 
 #include <FreeImage.h>
 
@@ -15,24 +16,30 @@ using std::string_view;
 
 class Bitmap {
 public:
-    Bitmap(string_view source);
+    explicit Bitmap(string_view source);
     Bitmap(Bitmap&& rhs);
+
+    Bitmap& operator=(Bitmap&& rhs);
+
+    bool operator<(const Bitmap& rhs) {
+        return std::max(width, height) > std::max(rhs.width, rhs.height);
+    }
 
     Bitmap(const Bitmap& rhs) = delete;
     Bitmap& operator=(const Bitmap& rhs) = delete;
-    Bitmap& operator=(Bitmap&& rhs) = delete;
 
-    unsigned width() const { return w; }
-    unsigned height() const { return h; }
-    const char* src() const { return path.c_str(); }
+    unsigned get_width() const { return width; }
+    unsigned get_height() const { return height; }
+    const char* get_path() const { return path.c_str(); }
 
     bool LoadBitmap(string_view path);
     void Save(string_view path);
 
     ~Bitmap();
+
 private:
-    unsigned w { 0 };
-    unsigned h { 0 };
+    unsigned width { 0 };
+    unsigned height { 0 };
 
     string path;
 

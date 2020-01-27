@@ -20,7 +20,7 @@ void process_arguments(int argc, char* argv[]) {
     for (int i = 0; i < argc; ++i) {
         auto value = argv[i];
         if (value[0] == '-') {
-            switch(std::tolower(value[1])) {
+            switch (std::tolower(value[1])) {
                 case 'o':
                     // override filename
                     filename = argv[++i];
@@ -49,9 +49,8 @@ void process_arguments(int argc, char* argv[]) {
         return;
     }
 
-    // TODO: start packing
-
-    // TODO: packer export
+    packer.Pack();
+    packer.Export(filename);
 }
 
 int main(int argc, char* argv[]) {

@@ -3,3 +3,13 @@
 //
 
 #include "packer.h"
+
+#include <algorithm>
+
+void Packer::Pack() {
+    std::sort(bitmaps.begin(), bitmaps.end());
+}
+
+void Packer::Export(string_view filename) {
+
+}
