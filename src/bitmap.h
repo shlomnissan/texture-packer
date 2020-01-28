@@ -20,13 +20,8 @@ public:
     Bitmap(int width, int height, int bpp);
     Bitmap(Bitmap&& rhs);
 
-    Bitmap& operator=(Bitmap&& rhs);
-
-    bool operator<(const Bitmap& rhs) {
-        return std::max(width, height) > std::max(rhs.width, rhs.height);
-    }
-
     Bitmap(const Bitmap& rhs) = delete;
+    Bitmap& operator=(Bitmap&& rhs);
     Bitmap& operator=(const Bitmap& rhs) = delete;
 
     unsigned get_width() const { return width; }

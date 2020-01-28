@@ -10,6 +10,7 @@
 #include <utility>
 
 #include "bitmap.h"
+#include "node.h"
 
 using std::vector;
 using std::string_view;
@@ -31,6 +32,9 @@ public:
 
 private:
     vector<Bitmap> bitmaps {};
+
+    Node* FindNode(Node* root, int width, int height);
+    void SplitNode(Node* node, int width, int height);
 };
 
 #endif //SRC_PACKER_H_

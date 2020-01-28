@@ -5,9 +5,12 @@
 #ifndef SRC_NODE_
 #define SRC_NODE_
 
+#include "bitmap.h"
+
 struct Node {
     int x, y;
     int width, height;
+    bool used = false;
 
     Node* right = nullptr;
     Node* down = nullptr;
