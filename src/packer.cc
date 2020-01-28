@@ -18,12 +18,11 @@ void Packer::Pack() {
     auto root = new Node(0, 0, 128, 64);
 
     // generate texture map tree
-    for (const auto& bitmap : bitmaps) {
-        auto node = FindNode(root, bitmap.get_width(),
-                                   bitmap.get_height());
+    for (int i = 0; i < bitmaps.size(); ++i) {
+        auto node = FindNode(root, bitmaps[i].get_width(),
+                                   bitmaps[i].get_height());
         if (node) {
-            SplitNode(node, bitmap.get_width(),
-                            bitmap.get_height());
+            SplitNode(node, &bitmaps[i]);
         }
     }
 
@@ -35,7 +34,7 @@ void Packer::Export(string_view filename) {
 }
 
 Node* Packer::FindNode(Node *root, int width, int height) {
-    if (root->used) {
+    if (root->bitmap) {
         auto right = FindNode(root->right, width, height);
         if (right) return right;
         return FindNode(root->down, width, height);
@@ -46,12 +45,18 @@ Node* Packer::FindNode(Node *root, int width, int height) {
     }
 }
 
-void Packer::SplitNode(Node *node, int width, int height) {
-    node->used = true;
+void Packer::SplitNode(Node *node, Bitmap* bitmap_ptr) {
+    node->bitmap = bitmap_ptr;
+    auto width = bitmap_ptr->get_width();
+    auto height = bitmap_ptr->get_height();
+
+    // create right node
     node->right = new Node(node->x + width,
                            node->y,
                            node->width - width,
                            height);
+
+    // create down node
     node->down = new Node(node->x,
                           node->y + height,
                           width,

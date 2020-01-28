@@ -10,8 +10,8 @@
 struct Node {
     int x, y;
     int width, height;
-    bool used = false;
 
+    Bitmap* bitmap = nullptr;
     Node* right = nullptr;
     Node* down = nullptr;
 

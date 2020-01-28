@@ -34,7 +34,7 @@ private:
     vector<Bitmap> bitmaps {};
 
     Node* FindNode(Node* root, int width, int height);
-    void SplitNode(Node* node, int width, int height);
+    void SplitNode(Node *node, Bitmap* bitmap);
 };
 
 #endif //SRC_PACKER_H_
