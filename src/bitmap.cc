@@ -17,6 +17,11 @@ Bitmap::Bitmap(string_view source) : path(source.data()) {
     LoadBitmap(path);
 }
 
+Bitmap::Bitmap(int width, int height, int bpp)
+    : width(width),
+      height(height),
+      bitmap(FreeImage_Allocate(width, height, bpp)) {}
+
 Bitmap::Bitmap(Bitmap &&rhs) {
     bitmap = rhs.bitmap;
     path = rhs.path;
@@ -56,6 +61,10 @@ bool Bitmap::LoadBitmap(string_view src) {
     }
 
     return false;
+}
+
+bool Bitmap::Paste(int x, int y, const Bitmap &bmp) {
+    return FreeImage_Paste(bitmap, bmp.data(), x, y, 255);
 }
 
 void Bitmap::Save(string_view path) {
