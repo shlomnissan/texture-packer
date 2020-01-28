@@ -7,28 +7,30 @@
 
 #include "packer.h"
 
+const char kDefaultFilename[] { "spritesheet" };
+
 void show_tip() {
     std::cout << "[Usage]\n"
               << "\ttexture_packer FILE_LIST [-o output file]\n";
 }
 
 void process_arguments(int argc, char* argv[]) {
-    bool failed = false;
-    std::string filename { "spritesheet" };  // default filename
+    auto failed { false };
+    std::string filename { kDefaultFilename };  // Default filename
     Packer packer;
 
     for (int i = 0; i < argc; ++i) {
-        auto value = argv[i];
+        auto value { argv[i] };
         if (value[0] == '-') {
             switch (std::tolower(value[1])) {
                 case 'o':
-                    // override filename
+                    // Override filename
                     filename = argv[++i];
                     break;
             }
         } else {
             try {
-                // create bitmaps and move them to the packer
+                // Create bitmaps and move them to the packer
                 Bitmap bitmap { argv[i] };
                 packer.AddBitmap(std::move(bitmap));
             } catch (std::runtime_error& e) {

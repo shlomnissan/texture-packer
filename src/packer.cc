@@ -9,17 +9,17 @@
 using std::make_unique;
 
 void Packer::Pack() {
-    // sort by max-side descending
+    // Sort by max-side descending
     std::sort(bitmaps.begin(), bitmaps.end(),
             [](const Bitmap& a, const Bitmap& b) -> bool {
         return std::max(a.get_width(), a.get_height())
              > std::max(b.get_width(), b.get_height());
     });
 
-    // create empty root node
+    // Create empty root node
     auto root = make_unique<Node>(0, 0, 128, 64);
 
-    // generate texture map tree
+    // Generate texture map tree
     for (int i = 0; i < bitmaps.size(); ++i) {
         auto node = FindNode(root, bitmaps[i].get_width(),
                                    bitmaps[i].get_height());
@@ -27,8 +27,6 @@ void Packer::Pack() {
             SplitNode(node, &bitmaps[i]);
         }
     }
-
-    // traverse texture tree
 }
 
 void Packer::Export(string_view filename) {
@@ -52,13 +50,14 @@ void Packer::SplitNode(Node *node, Bitmap* bitmap_ptr) {
     auto width = bitmap_ptr->get_width();
     auto height = bitmap_ptr->get_height();
 
-    // create right node
+    // Create right node
     node->right = std::make_unique<Node>(
             node->x + width,
             node->y,
             node->width - width,
             height);
 
+    // Create bottom node
     node->down = std::make_unique<Node>(
             node->x,
             node->y + height,

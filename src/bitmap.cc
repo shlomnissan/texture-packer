@@ -64,7 +64,7 @@ bool Bitmap::LoadBitmap(string_view src) {
 }
 
 bool Bitmap::Paste(int x, int y, const Bitmap &bmp) {
-    return FreeImage_Paste(bitmap, bmp.data(), x, y, 255);
+    return FreeImage_Paste(bitmap, bmp.data(), x, y, /* opacity = */ 255);
 }
 
 void Bitmap::Save(string_view path) {
