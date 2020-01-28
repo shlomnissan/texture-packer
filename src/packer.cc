@@ -6,6 +6,8 @@
 
 #include <algorithm>
 
+using std::make_unique;
+
 void Packer::Pack() {
     // sort by max-side descending
     std::sort(bitmaps.begin(), bitmaps.end(),
@@ -15,7 +17,7 @@ void Packer::Pack() {
     });
 
     // create empty root node
-    auto root = new Node(0, 0, 128, 64);
+    auto root = make_unique<Node>(0, 0, 128, 64);
 
     // generate texture map tree
     for (int i = 0; i < bitmaps.size(); ++i) {
@@ -33,13 +35,13 @@ void Packer::Export(string_view filename) {
 
 }
 
-Node* Packer::FindNode(Node *root, int width, int height) {
+Node* Packer::FindNode(const unique_ptr<Node>& root, int width, int height) {
     if (root->bitmap) {
         auto right = FindNode(root->right, width, height);
         if (right) return right;
         return FindNode(root->down, width, height);
     } else if (width <= root->width && height <= root->height) {
-        return root;
+        return root.get();
     } else {
         return nullptr;
     }
@@ -51,14 +53,15 @@ void Packer::SplitNode(Node *node, Bitmap* bitmap_ptr) {
     auto height = bitmap_ptr->get_height();
 
     // create right node
-    node->right = new Node(node->x + width,
-                           node->y,
-                           node->width - width,
-                           height);
+    node->right = std::make_unique<Node>(
+            node->x + width,
+            node->y,
+            node->width - width,
+            height);
 
-    // create down node
-    node->down = new Node(node->x,
-                          node->y + height,
-                          width,
-                          node->height - height);
+    node->down = std::make_unique<Node>(
+            node->x,
+            node->y + height,
+            width,
+            node->height - height);
 }

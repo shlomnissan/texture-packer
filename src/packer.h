@@ -8,6 +8,7 @@
 #include <vector>
 #include <string_view>
 #include <utility>
+#include <memory>
 
 #include "bitmap.h"
 #include "node.h"
@@ -33,7 +34,7 @@ public:
 private:
     vector<Bitmap> bitmaps {};
 
-    Node* FindNode(Node* root, int width, int height);
+    Node* FindNode(const unique_ptr<Node>& root, int width, int height);
     void SplitNode(Node *node, Bitmap* bitmap);
 };
 

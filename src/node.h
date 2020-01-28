@@ -5,15 +5,19 @@
 #ifndef SRC_NODE_
 #define SRC_NODE_
 
+#include <memory>
+
 #include "bitmap.h"
+
+using std::unique_ptr;
 
 struct Node {
     int x, y;
     int width, height;
 
     Bitmap* bitmap = nullptr;
-    Node* right = nullptr;
-    Node* down = nullptr;
+    unique_ptr<Node> right;
+    unique_ptr<Node> down;
 
     Node(int x, int y, int w, int h)
         : x(x), y(y), width(w), height(h) {}
