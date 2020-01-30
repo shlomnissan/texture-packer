@@ -1,12 +1,15 @@
-//
-// Created by Shlomi Nissan on 1/25/20.
-//
+// Copyright 2020 Betamark Pty Ltd.
+// Author: Shlomi Nissan
 
 #include "packer.h"
 
 #include <algorithm>
 
 using std::make_unique;
+
+const unsigned kPlaceholderWidth = 128;
+const unsigned kPlaceholderHeight = 64;
+const unsigned kDefaultBPP = 32;
 
 void Packer::Pack() {
     // Sort by max-side descending
@@ -17,7 +20,7 @@ void Packer::Pack() {
     });
 
     // Create empty root node
-    auto root = make_unique<Node>(0, 0, 128, 64);
+    auto root = make_unique<Node>(0, 0, kPlaceholderWidth, kPlaceholderHeight);
 
     // Generate texture map tree
     for (int i = 0; i < bitmaps.size(); ++i) {
@@ -27,10 +30,30 @@ void Packer::Pack() {
             SplitNode(node, &bitmaps[i]);
         }
     }
+
+    // Create a blank sprite-sheet
+    spritesheet = std::make_unique<Bitmap>(kPlaceholderWidth,
+                                           kPlaceholderHeight,
+                                           kDefaultBPP);
+
+    Draw(root.get());
 }
 
 void Packer::Export(string_view filename) {
+    spritesheet->Save("atlas.png");
+}
 
+void Packer::Draw(Node *node) {
+    if (node == nullptr) {
+        return;
+    }
+
+    if (node->bitmap != nullptr) {
+        spritesheet->Paste(node->x, node->y, *node->bitmap);
+    }
+
+    Draw(node->right.get());
+    Draw(node->down.get());
 }
 
 Node* Packer::FindNode(const unique_ptr<Node>& root, int width, int height) {

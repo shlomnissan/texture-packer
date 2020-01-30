@@ -1,6 +1,5 @@
-//
-// Created by Shlomi Nissan on 1/24/20.
-//
+// Copyright 2020 Betamark Pty Ltd.
+// Author: Shlomi Nissan
 
 #ifndef SRC_BITMAP_H_
 #define SRC_BITMAP_H_
@@ -19,10 +18,12 @@ public:
     explicit Bitmap(string_view source);
     Bitmap(int width, int height, int bpp);
     Bitmap(Bitmap&& rhs);
+    Bitmap(const Bitmap& rhs) = delete;  // Delete copy constructor
 
-    Bitmap(const Bitmap& rhs) = delete;
     Bitmap& operator=(Bitmap&& rhs);
-    Bitmap& operator=(const Bitmap& rhs) = delete;
+    Bitmap& operator=(const Bitmap& rhs) = delete;  // Delete copy assignment
+
+
 
     unsigned get_width() const { return width; }
     unsigned get_height() const { return height; }

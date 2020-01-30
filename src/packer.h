@@ -1,6 +1,5 @@
-//
-// Created by Shlomi Nissan on 1/25/20.
-//
+// Copyright 2020 Betamark Pty Ltd.
+// Author: Shlomi Nissan
 
 #ifndef SRC_PACKER_H_
 #define SRC_PACKER_H_
@@ -15,6 +14,7 @@
 
 using std::vector;
 using std::string_view;
+using std::unique_ptr;
 
 class Packer {
 public:
@@ -24,18 +24,18 @@ public:
         bitmaps.emplace_back(std::move(bitmap));
     }
 
-    int size() const {
-        return bitmaps.size();
-    }
+    int size() const { return bitmaps.size(); }
 
     void Pack();
     void Export(string_view filename);
 
 private:
     vector<Bitmap> bitmaps {};
+    unique_ptr<Bitmap> spritesheet;
 
     Node* FindNode(const unique_ptr<Node>& root, int width, int height);
     void SplitNode(Node *node, Bitmap* bitmap);
+    void Draw(Node* node);
 };
 
 #endif //SRC_PACKER_H_

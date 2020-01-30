@@ -1,6 +1,5 @@
-//
-// Created by Shlomi Nissan on 1/25/20.
-//
+// Copyright 2020 Betamark Pty Ltd.
+// Author: Shlomi Nissan
 
 #ifndef SRC_NODE_
 #define SRC_NODE_

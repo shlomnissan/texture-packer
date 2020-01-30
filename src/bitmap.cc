@@ -1,6 +1,5 @@
-//
-// Created by Shlomi Nissan on 1/24/20.
-//
+// Copyright 2020 Betamark Pty Ltd.
+// Author: Shlomi Nissan
 
 #include "bitmap.h"
 
