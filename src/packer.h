@@ -21,17 +21,17 @@ public:
     Packer() = default;
 
     void AddBitmap(Bitmap&& bitmap) {
-        bitmaps.emplace_back(std::move(bitmap));
+        bitmaps_.emplace_back(std::move(bitmap));
     }
 
-    int size() const { return bitmaps.size(); }
+    int size() const { return bitmaps_.size(); }
 
     void Pack();
     void Export(string_view filename);
 
 private:
-    vector<Bitmap> bitmaps {};
-    unique_ptr<Bitmap> spritesheet;
+    vector<Bitmap> bitmaps_ {};
+    unique_ptr<Bitmap> spritesheet_;
 
     Node* FindNode(const unique_ptr<Node>& root, int width, int height);
     void SplitNode(Node *node, Bitmap* bitmap);

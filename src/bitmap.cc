@@ -9,52 +9,52 @@
 
 namespace fs = std::experimental::filesystem;
 
-Bitmap::Bitmap(string_view source) : path(source.data()) {
-    if (!fs::exists(path)) {
-        throw std::runtime_error("Can't open file " + path);
+Bitmap::Bitmap(string_view source) : path_(source.data()) {
+    if (!fs::exists(path_)) {
+        throw std::runtime_error("Can't open file " + path_);
     }
-    LoadBitmap(path);
+    LoadBitmap(path_);
 }
 
 Bitmap::Bitmap(int width, int height, int bpp)
-    : width(width),
-      height(height),
-      bitmap(FreeImage_Allocate(width, height, bpp)) {}
+    : width_(width),
+      height_(height),
+      bitmap_(FreeImage_Allocate(width, height, bpp)) {}
 
 Bitmap::Bitmap(Bitmap &&rhs) {
-    bitmap = rhs.bitmap;
-    path = rhs.path;
-    width = rhs.width;
-    height = rhs.height;
+    bitmap_ = rhs.bitmap_;
+    path_ = rhs.path_;
+    width_ = rhs.width_;
+    height_ = rhs.height_;
 
-    rhs.bitmap = nullptr;
-    rhs.path = "";
-    rhs.width = 0; rhs.height = 0;
+    rhs.bitmap_ = nullptr;
+    rhs.path_ = "";
+    rhs.width_ = 0; rhs.height_ = 0;
 }
 
 Bitmap &Bitmap::operator=(Bitmap &&rhs) {
     if (this != &rhs) {
-        FreeImage_Unload(bitmap);
-        bitmap = rhs.bitmap;
-        path = rhs.path;
-        width = rhs.width;
-        height = rhs.height;
+        FreeImage_Unload(bitmap_);
+        bitmap_ = rhs.bitmap_;
+        path_ = rhs.path_;
+        width_ = rhs.width_;
+        height_ = rhs.height_;
 
-        rhs.bitmap = nullptr;
-        rhs.path = "";
-        rhs.width = 0; rhs.height = 0;
+        rhs.bitmap_ = nullptr;
+        rhs.path_ = "";
+        rhs.width_ = 0; rhs.height_ = 0;
     }
     return *this;
 }
 
 bool Bitmap::LoadBitmap(string_view src) {
-    path = src;
+    path_ = src;
 
-    FREE_IMAGE_FORMAT fif { FreeImage_GetFIFFromFilename(path.data()) };
+    FREE_IMAGE_FORMAT fif { FreeImage_GetFIFFromFilename(path_.data()) };
     if (fif != FIF_UNKNOWN) {
-        bitmap = FreeImage_Load(fif, path.data());
-        width = FreeImage_GetWidth(bitmap);
-        height = FreeImage_GetHeight(bitmap);
+        bitmap_ = FreeImage_Load(fif, path_.data());
+        width_ = FreeImage_GetWidth(bitmap_);
+        height_ = FreeImage_GetHeight(bitmap_);
 
         return true;
     }
@@ -63,16 +63,16 @@ bool Bitmap::LoadBitmap(string_view src) {
 }
 
 bool Bitmap::Paste(int x, int y, const Bitmap &bmp) {
-    return FreeImage_Paste(bitmap, bmp.data(), x, y, /* opacity = */ 255);
+    return FreeImage_Paste(bitmap_, bmp.data(), x, y, /* opacity = */ 255);
 }
 
 void Bitmap::Save(string_view path) {
-    FreeImage_Save(FIF_PNG, bitmap, path.data());
+    FreeImage_Save(FIF_PNG, bitmap_, path.data());
 }
 
 Bitmap::~Bitmap() {
-    if (!bitmap) return;
+    if (!bitmap_) return;
 
-    FreeImage_Unload(bitmap);
-    bitmap = nullptr;
+    FreeImage_Unload(bitmap_);
+    bitmap_ = nullptr;
 }
