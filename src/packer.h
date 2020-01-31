@@ -34,8 +34,10 @@ private:
     unique_ptr<Bitmap> spritesheet_;
 
     Node* FindNode(const unique_ptr<Node>& root, int width, int height);
-    void SplitNode(Node *node, Bitmap* bitmap);
-    void Draw(Node* node);
+    Node* GrowNode(Node *root, int width, int height);
+    Node* SplitNode(Node *node, int width, int height);
+    void GenerateTextureMap(Node* node);
+    void GenerateMetadata(Node* node);
 };
 
 #endif //SRC_PACKER_H_

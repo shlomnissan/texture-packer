@@ -7,8 +7,6 @@
 
 using std::make_unique;
 
-const unsigned kPlaceholderWidth = 128;
-const unsigned kPlaceholderHeight = 64;
 const unsigned kDefaultBPP = 32;
 
 void Packer::Pack() {
@@ -19,31 +17,38 @@ void Packer::Pack() {
              > std::max(b.width(), b.height());
     });
 
-    // Create empty root node
-    auto root = make_unique<Node>(0, 0, kPlaceholderWidth, kPlaceholderHeight);
+    // Create empty root node, sized to fit first bitmap
+    auto root = make_unique<Node>(0, 0,
+            bitmaps_.front().width(),
+            bitmaps_.front().height());
 
     // Generate texture map tree
     for (int i = 0; i < bitmaps_.size(); ++i) {
-        auto node = FindNode(root, bitmaps_[i].width(),
-                             bitmaps_[i].height());
+        auto width = bitmaps_[i].width();
+        auto height = bitmaps_[i].height();
+
+        auto node = FindNode(root, width, height);
         if (node) {
-            SplitNode(node, &bitmaps_[i]);
+            node = SplitNode(node, width, height);
+        } else {
+            node = GrowNode(root.get(), width, height);
         }
+
+        // Assign bitmap ptr to node
+        node->bitmap = &bitmaps_[i];
     }
 
-    // Create a blank sprite-sheet
-    spritesheet_ = std::make_unique<Bitmap>(kPlaceholderWidth,
-                                            kPlaceholderHeight,
-                                            kDefaultBPP);
+    // TODO: init empty spritesheet
 
-    Draw(root.get());
+    GenerateTextureMap(root.get());
+    GenerateMetadata(root.get());
 }
 
 void Packer::Export(string_view filename) {
     spritesheet_->Save("atlas.png");
 }
 
-void Packer::Draw(Node *node) {
+void Packer::GenerateTextureMap(Node *node) {
     if (node == nullptr) {
         return;
     }
@@ -51,9 +56,12 @@ void Packer::Draw(Node *node) {
     if (node->bitmap != nullptr) {
         spritesheet_->Paste(node->x, node->y, *node->bitmap);
     }
+    GenerateTextureMap(node->right.get());
+    GenerateTextureMap(node->down.get());
+}
 
-    Draw(node->right.get());
-    Draw(node->down.get());
+void Packer::GenerateMetadata(Node *node) {
+    // TODO: Generate metadata
 }
 
 Node* Packer::FindNode(const unique_ptr<Node>& root, int width, int height) {
@@ -68,11 +76,7 @@ Node* Packer::FindNode(const unique_ptr<Node>& root, int width, int height) {
     }
 }
 
-void Packer::SplitNode(Node *node, Bitmap* bitmap_ptr) {
-    node->bitmap = bitmap_ptr;
-    auto width = bitmap_ptr->width();
-    auto height = bitmap_ptr->height();
-
+Node* Packer::SplitNode(Node *node, int width, int height) {
     // Create right node
     node->right = std::make_unique<Node>(
             node->x + width,
@@ -86,4 +90,13 @@ void Packer::SplitNode(Node *node, Bitmap* bitmap_ptr) {
             node->y + height,
             width,
             node->height - height);
+
+    return node;
+}
+
+Node* Packer::GrowNode(Node *root, int width, int height) {
+    auto canGrowDown = width <= root->width;
+    auto canGrowRight = height <= root->height;
+
+    return nullptr;
 }
