@@ -4,15 +4,11 @@
 #include "packer.h"
 
 #include <algorithm>
-#include <iostream>
 
 using std::make_unique;
 
-const unsigned kDefaultBPP = 32;
-
 void Packer::Pack() {
     // Sort by max-side descending
-
     std::sort(bitmaps_.begin(), bitmaps_.end(),
               [](const Bitmap& a, const Bitmap& b) -> bool {
         return std::max(a.width(), a.height())
@@ -32,24 +28,24 @@ void Packer::Pack() {
         auto node = FindNode(root, width, height);
 
         if (node) {
-            std::cout << "Split node\n";
             node = SplitNode(node, width, height);
         } else {
-            std::cout << "Grow node\n";
-            node = GrowNode(root.get(), width, height);
+            node = GrowNode(&root, width, height);
         }
 
         // Assign bitmap ptr to node
         node->bitmap = &bitmaps_[i];
     }
 
-    // TODO: init empty spritesheet
+    spritesheet_ = std::make_unique<Bitmap>
+            (root->width, root->height, /* bpp = */ 32);
 
-    //GenerateTextureMap(root.get());
-    //GenerateMetadata(root.get());
+    GenerateTextureMap(root.get());
+    GenerateMetadata(root.get());
 }
 
 void Packer::Export(string_view filename) {
+    // TODO: use filename
     spritesheet_->Save("atlas.png");
 }
 
@@ -99,7 +95,8 @@ Node* Packer::SplitNode(Node *node, int width, int height) {
     return node;
 }
 
-Node *Packer::GrowRight(Node *root, int width, int height) {
+Node *Packer::GrowRight(unique_ptr<Node>* root_ptr, int width, int height) {
+    auto& root = *root_ptr;
     auto newRoot = std::make_unique<Node>
             (0, 0, root->width + width, root->height);
 
@@ -107,48 +104,50 @@ Node *Packer::GrowRight(Node *root, int width, int height) {
     newRoot->right = std::make_unique<Node>
             (root->width, 0, width, root->height);
 
-    newRoot->down = unique_ptr<Node>(root);
+    newRoot->down = std::move(root);
 
     // Override the root pointer
-    root = newRoot.get();
+    root = std::move(newRoot);
 
-    if (auto node = FindNode(newRoot, width, height)) {
+    if (auto node = FindNode(root, width, height)) {
         return SplitNode(node, width, height);
     }
 
     return nullptr;
 }
 
-Node *Packer::GrowDown(Node *root, int width, int height) {
+Node *Packer::GrowDown(unique_ptr<Node>* root_ptr, int width, int height) {
+    auto& root = *root_ptr;
     auto newRoot = std::make_unique<Node>
             (0, 0, root->width, root->height + height);
 
     newRoot->bitmap = root->bitmap;
     newRoot->down = std::make_unique<Node>
             (0, root->height, root->width, height);
-    newRoot->right = unique_ptr<Node>(root);
+    newRoot->right = std::move(root);
 
     // Override the root pointer
-    root = newRoot.get();
+    root = std::move(newRoot);
 
-    if (auto node = FindNode(newRoot, width, height)) {
+    if (auto node = FindNode(root, width, height)) {
         return SplitNode(node, width, height);
     }
 
     return nullptr;
 }
 
-Node* Packer::GrowNode(Node *root, int width, int height) {
+Node* Packer::GrowNode(unique_ptr<Node>* root_ptr, int width, int height) {
+    auto& root = *root_ptr;
     auto can_grow_right = height <= root->height;
     auto can_grow_down = width <= root->width;
 
     auto should_grow_right = can_grow_right && root->height >= (root->width + width);
     auto should_grow_down = can_grow_down && root->width >= (root->height + height);
 
-    if (should_grow_right) return GrowRight(root, width, height);
-    if (should_grow_down) return GrowDown(root, width, height);
-    if (can_grow_right) return GrowRight(root, width, height);
-    if (can_grow_down) return GrowDown(root, width, height);
+    if (should_grow_right) return GrowRight(root_ptr, width, height);
+    if (should_grow_down) return GrowDown(root_ptr, width, height);
+    if (can_grow_right) return GrowRight(root_ptr, width, height);
+    if (can_grow_down) return GrowDown(root_ptr, width, height);
 
     return nullptr;
 }

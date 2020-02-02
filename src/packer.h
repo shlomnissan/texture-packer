@@ -36,9 +36,9 @@ private:
     Node* FindNode(const unique_ptr<Node>& root, int width, int height);
     Node* SplitNode(Node *node, int width, int height);
 
-    Node* GrowNode(Node *root, int width, int height);
-    Node* GrowRight(Node *root, int width, int height);
-    Node* GrowDown(Node* root, int width, int height);
+    Node* GrowNode(unique_ptr<Node>* root_ptr, int width, int height);
+    Node* GrowRight(unique_ptr<Node>* root_ptr, int width, int height);
+    Node* GrowDown(unique_ptr<Node>* root_ptr, int width, int height);
 
     void GenerateTextureMap(Node* node);
     void GenerateMetadata(Node* node);

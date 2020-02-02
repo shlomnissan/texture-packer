@@ -51,7 +51,7 @@ void process_arguments(int argc, char* argv[]) {
     }
 
     packer.Pack();
-    //packer.Export(filename);
+    packer.Export(filename);
 }
 
 int main(int argc, char* argv[]) {
