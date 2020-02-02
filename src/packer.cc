@@ -4,6 +4,7 @@
 #include "packer.h"
 
 #include <algorithm>
+#include <iostream>
 
 using std::make_unique;
 
@@ -11,6 +12,7 @@ const unsigned kDefaultBPP = 32;
 
 void Packer::Pack() {
     // Sort by max-side descending
+
     std::sort(bitmaps_.begin(), bitmaps_.end(),
               [](const Bitmap& a, const Bitmap& b) -> bool {
         return std::max(a.width(), a.height())
@@ -28,9 +30,12 @@ void Packer::Pack() {
         auto height = bitmaps_[i].height();
 
         auto node = FindNode(root, width, height);
+
         if (node) {
+            std::cout << "Split node\n";
             node = SplitNode(node, width, height);
         } else {
+            std::cout << "Grow node\n";
             node = GrowNode(root.get(), width, height);
         }
 
@@ -40,8 +45,8 @@ void Packer::Pack() {
 
     // TODO: init empty spritesheet
 
-    GenerateTextureMap(root.get());
-    GenerateMetadata(root.get());
+    //GenerateTextureMap(root.get());
+    //GenerateMetadata(root.get());
 }
 
 void Packer::Export(string_view filename) {
@@ -94,9 +99,56 @@ Node* Packer::SplitNode(Node *node, int width, int height) {
     return node;
 }
 
+Node *Packer::GrowRight(Node *root, int width, int height) {
+    auto newRoot = std::make_unique<Node>
+            (0, 0, root->width + width, root->height);
+
+    newRoot->bitmap = root->bitmap;
+    newRoot->right = std::make_unique<Node>
+            (root->width, 0, width, root->height);
+
+    newRoot->down = unique_ptr<Node>(root);
+
+    // Override the root pointer
+    root = newRoot.get();
+
+    if (auto node = FindNode(newRoot, width, height)) {
+        return SplitNode(node, width, height);
+    }
+
+    return nullptr;
+}
+
+Node *Packer::GrowDown(Node *root, int width, int height) {
+    auto newRoot = std::make_unique<Node>
+            (0, 0, root->width, root->height + height);
+
+    newRoot->bitmap = root->bitmap;
+    newRoot->down = std::make_unique<Node>
+            (0, root->height, root->width, height);
+    newRoot->right = unique_ptr<Node>(root);
+
+    // Override the root pointer
+    root = newRoot.get();
+
+    if (auto node = FindNode(newRoot, width, height)) {
+        return SplitNode(node, width, height);
+    }
+
+    return nullptr;
+}
+
 Node* Packer::GrowNode(Node *root, int width, int height) {
-    auto canGrowDown = width <= root->width;
-    auto canGrowRight = height <= root->height;
+    auto can_grow_right = height <= root->height;
+    auto can_grow_down = width <= root->width;
+
+    auto should_grow_right = can_grow_right && root->height >= (root->width + width);
+    auto should_grow_down = can_grow_down && root->width >= (root->height + height);
+
+    if (should_grow_right) return GrowRight(root, width, height);
+    if (should_grow_down) return GrowDown(root, width, height);
+    if (can_grow_right) return GrowRight(root, width, height);
+    if (can_grow_down) return GrowDown(root, width, height);
 
     return nullptr;
 }
