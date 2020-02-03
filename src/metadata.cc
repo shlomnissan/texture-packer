@@ -21,10 +21,10 @@ void Metadata::Write(const Node* node) {
     writer.Int(node->y);
 
     writer.Key("width");
-    writer.Int(node->width);
+    writer.Int(node->bitmap->width());
 
     writer.Key("height");
-    writer.Int(node->height);
+    writer.Int(node->bitmap->height());
 
     writer.EndObject();
 }
