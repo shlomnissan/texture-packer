@@ -68,11 +68,9 @@ Node* Packer::FindNode(const unique_ptr<Node>& root, int width, int height) {
             return right;
         }
         return FindNode(root->down, width, height);
-    }
-    else if (width <= root->width && height <= root->height) {
+    } else if (width <= root->width && height <= root->height) {
         return root.get();
-    }
-    else {
+    } else {
         return nullptr;
     }
 }

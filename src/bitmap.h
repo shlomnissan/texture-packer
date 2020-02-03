@@ -17,7 +17,7 @@ class Bitmap {
 public:
     explicit Bitmap(string_view source);
     Bitmap(int width, int height, int bpp);
-    Bitmap(Bitmap&& rhs);
+    Bitmap(Bitmap&& rhs) noexcept;
     Bitmap(const Bitmap& rhs) = delete;  // Delete copy constructor
 
     Bitmap& operator=(Bitmap&& rhs);

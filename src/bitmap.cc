@@ -21,7 +21,7 @@ Bitmap::Bitmap(int width, int height, int bpp)
       height_(height),
       bitmap_(FreeImage_Allocate(width, height, bpp)) {}
 
-Bitmap::Bitmap(Bitmap &&rhs) {
+Bitmap::Bitmap(Bitmap &&rhs) noexcept {
     bitmap_ = rhs.bitmap_;
     path_ = rhs.path_;
     width_ = rhs.width_;
@@ -63,7 +63,7 @@ bool Bitmap::LoadBitmap(string_view src) {
 }
 
 bool Bitmap::Paste(int x, int y, const Bitmap &bmp) {
-    return FreeImage_Paste(bitmap_, bmp.data(), x, y, /* opacity = */ 255);
+    return FreeImage_Paste(bitmap_, bmp.data(), x, y, /* alpha = */ 255);
 }
 
 void Bitmap::Save(string_view path) {

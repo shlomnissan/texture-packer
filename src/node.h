@@ -18,8 +18,7 @@ struct Node {
     unique_ptr<Node> right;
     unique_ptr<Node> down;
 
-    Node(int x, int y, int w, int h)
-        : x(x), y(y), width(w), height(h) {}
+    Node(int x, int y, int w, int h) : x(x), y(y), width(w), height(h) {}
 };
 
 #endif  // SRC_NODE_
