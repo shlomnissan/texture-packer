@@ -6,7 +6,7 @@ RUN apt-get update \
     xz-utils \
     build-essential \
     curl \
-    vim \
+    rapidjson-dev \
     libfreeimage3 \
     libfreeimage-dev \
     openssh-server \

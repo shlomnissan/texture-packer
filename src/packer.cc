@@ -39,12 +39,10 @@ void Packer::Pack() {
 
     spritesheet_ = std::make_unique<Bitmap>
             (root_->width, root_->height, /* bpp = */ 32);
-
-    GenerateTextureMap(root_.get());
-    GenerateMetadata(root_.get());
 }
 
 void Packer::Export(const string& filename) {
+    GenerateTextureMap(root_.get());
     spritesheet_->Save(filename + ".png");
 }
 
@@ -54,24 +52,27 @@ void Packer::GenerateTextureMap(Node *node) {
     }
 
     if (node->bitmap != nullptr) {
+        // Save image
         spritesheet_->Paste(node->x, node->y, *node->bitmap);
+
+        // TODO: save metadata
     }
+
     GenerateTextureMap(node->right.get());
     GenerateTextureMap(node->down.get());
 }
 
-void Packer::GenerateMetadata(Node *node) {
-    // TODO: Generate metadata
-}
-
 Node* Packer::FindNode(const unique_ptr<Node>& root, int width, int height) {
     if (root->bitmap) {
-        auto right = FindNode(root->right, width, height);
-        if (right) return right;
+        if (auto right = FindNode(root->right, width, height)) {
+            return right;
+        }
         return FindNode(root->down, width, height);
-    } else if (width <= root->width && height <= root->height) {
+    }
+    else if (width <= root->width && height <= root->height) {
         return root.get();
-    } else {
+    }
+    else {
         return nullptr;
     }
 }

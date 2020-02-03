@@ -11,6 +11,7 @@
 
 #include "bitmap.h"
 #include "node.h"
+#include "metadata.h"
 
 using std::vector;
 using std::unique_ptr;
@@ -33,6 +34,7 @@ private:
     vector<Bitmap> bitmaps_ {};
     unique_ptr<Bitmap> spritesheet_;
     unique_ptr<Node> root_;
+    Metadata metadata_;
 
     Node* FindNode(const unique_ptr<Node>& root, int width, int height);
     Node* SplitNode(Node *node, int width, int height);
@@ -42,7 +44,6 @@ private:
     Node* GrowDown(int width, int height);
 
     void GenerateTextureMap(Node* node);
-    void GenerateMetadata(Node* node);
 };
 
 #endif //SRC_PACKER_H_
