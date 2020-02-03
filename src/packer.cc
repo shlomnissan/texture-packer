@@ -52,7 +52,7 @@ void Packer::GenerateTextureMap(Node *node) {
         return;
     }
 
-    if (node->bitmap != nullptr) {
+    if (node->used && node->bitmap != nullptr) {
         // Save image
         spritesheet_->Paste(node->x, node->y, *node->bitmap);
         metadata_.Write(node);
@@ -63,7 +63,7 @@ void Packer::GenerateTextureMap(Node *node) {
 }
 
 Node* Packer::FindNode(const unique_ptr<Node>& root, int width, int height) {
-    if (root->bitmap) {
+    if (root->used) {
         if (auto right = FindNode(root->right, width, height)) {
             return right;
         }
@@ -76,6 +76,8 @@ Node* Packer::FindNode(const unique_ptr<Node>& root, int width, int height) {
 }
 
 Node* Packer::SplitNode(Node *node, int width, int height) {
+    node->used = true;
+
     // Create right node
     node->right = std::make_unique<Node>(
             node->x + width,
@@ -97,7 +99,7 @@ Node *Packer::GrowRight(int width, int height) {
     auto newRoot = std::make_unique<Node>
             (0, 0, root_->width + width, root_->height);
 
-    newRoot->bitmap = root_->bitmap;
+    newRoot->used = true;
     newRoot->right = std::make_unique<Node>
             (root_->width, 0, width, root_->height);
 
@@ -117,7 +119,7 @@ Node *Packer::GrowDown(int width, int height) {
     auto newRoot = std::make_unique<Node>
             (0, 0, root_->width, root_->height + height);
 
-    newRoot->bitmap = root_->bitmap;
+    newRoot->used = true;
     newRoot->down = std::make_unique<Node>
             (0, root_->height, root_->width, height);
     newRoot->right = std::move(root_);

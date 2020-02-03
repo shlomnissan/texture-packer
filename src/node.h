@@ -13,6 +13,7 @@ using std::unique_ptr;
 struct Node {
     int x, y;
     int width, height;
+    bool used = false;
 
     Bitmap* bitmap = nullptr;
     unique_ptr<Node> right;

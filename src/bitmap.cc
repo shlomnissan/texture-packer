@@ -28,21 +28,20 @@ Bitmap::Bitmap(Bitmap &&rhs) noexcept {
     height_ = rhs.height_;
 
     rhs.bitmap_ = nullptr;
-    rhs.path_ = "";
-    rhs.width_ = 0; rhs.height_ = 0;
 }
 
 Bitmap &Bitmap::operator=(Bitmap &&rhs) {
     if (this != &rhs) {
-        FreeImage_Unload(bitmap_);
+        if (bitmap_) {
+            FreeImage_Unload(bitmap_);
+        }
+
         bitmap_ = rhs.bitmap_;
         path_ = rhs.path_;
         width_ = rhs.width_;
         height_ = rhs.height_;
 
         rhs.bitmap_ = nullptr;
-        rhs.path_ = "";
-        rhs.width_ = 0; rhs.height_ = 0;
     }
     return *this;
 }
