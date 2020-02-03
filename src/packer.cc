@@ -44,9 +44,8 @@ void Packer::Pack() {
     GenerateMetadata(root.get());
 }
 
-void Packer::Export(string_view filename) {
-    // TODO: use filename
-    spritesheet_->Save("atlas.png");
+void Packer::Export(const string& filename) {
+    spritesheet_->Save(filename + ".png");
 }
 
 void Packer::GenerateTextureMap(Node *node) {
@@ -141,8 +140,10 @@ Node* Packer::GrowNode(unique_ptr<Node>* root_ptr, int width, int height) {
     auto can_grow_right = height <= root->height;
     auto can_grow_down = width <= root->width;
 
-    auto should_grow_right = can_grow_right && root->height >= (root->width + width);
-    auto should_grow_down = can_grow_down && root->width >= (root->height + height);
+    auto should_grow_right =
+            can_grow_right && root->height >= (root->width + width);
+    auto should_grow_down =
+            can_grow_down && root->width >= (root->height + height);
 
     if (should_grow_right) return GrowRight(root_ptr, width, height);
     if (should_grow_down) return GrowDown(root_ptr, width, height);

@@ -5,16 +5,16 @@
 #define SRC_PACKER_H_
 
 #include <vector>
-#include <string_view>
 #include <utility>
 #include <memory>
+#include <string>
 
 #include "bitmap.h"
 #include "node.h"
 
 using std::vector;
-using std::string_view;
 using std::unique_ptr;
+using std::string;
 
 class Packer {
 public:
@@ -27,7 +27,7 @@ public:
     int size() const { return bitmaps_.size(); }
 
     void Pack();
-    void Export(string_view filename);
+    void Export(const string& filename);
 
 private:
     vector<Bitmap> bitmaps_ {};
