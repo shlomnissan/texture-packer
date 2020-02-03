@@ -16,21 +16,21 @@ void Packer::Pack() {
     });
 
     // Create empty root node, sized to fit first bitmap
-    auto root = make_unique<Node>(0, 0,
-            bitmaps_.front().width(),
-            bitmaps_.front().height());
+    root_ = make_unique<Node>(0, 0,
+        bitmaps_.front().width(),
+        bitmaps_.front().height());
 
     // Generate texture map tree
     for (int i = 0; i < bitmaps_.size(); ++i) {
         auto width = bitmaps_[i].width();
         auto height = bitmaps_[i].height();
 
-        auto node = FindNode(root, width, height);
+        auto node = FindNode(root_, width, height);
 
         if (node) {
             node = SplitNode(node, width, height);
         } else {
-            node = GrowNode(&root, width, height);
+            node = GrowNode(width, height);
         }
 
         // Assign bitmap ptr to node
@@ -38,10 +38,10 @@ void Packer::Pack() {
     }
 
     spritesheet_ = std::make_unique<Bitmap>
-            (root->width, root->height, /* bpp = */ 32);
+            (root_->width, root_->height, /* bpp = */ 32);
 
-    GenerateTextureMap(root.get());
-    GenerateMetadata(root.get());
+    GenerateTextureMap(root_.get());
+    GenerateMetadata(root_.get());
 }
 
 void Packer::Export(const string& filename) {
@@ -94,61 +94,58 @@ Node* Packer::SplitNode(Node *node, int width, int height) {
     return node;
 }
 
-Node *Packer::GrowRight(unique_ptr<Node>* root_ptr, int width, int height) {
-    auto& root = *root_ptr;
+Node *Packer::GrowRight(int width, int height) {
     auto newRoot = std::make_unique<Node>
-            (0, 0, root->width + width, root->height);
+            (0, 0, root_->width + width, root_->height);
 
-    newRoot->bitmap = root->bitmap;
+    newRoot->bitmap = root_->bitmap;
     newRoot->right = std::make_unique<Node>
-            (root->width, 0, width, root->height);
+            (root_->width, 0, width, root_->height);
 
-    newRoot->down = std::move(root);
+    newRoot->down = std::move(root_);
 
     // Override the root pointer
-    root = std::move(newRoot);
+    root_ = std::move(newRoot);
 
-    if (auto node = FindNode(root, width, height)) {
+    if (auto node = FindNode(root_, width, height)) {
         return SplitNode(node, width, height);
     }
 
     return nullptr;
 }
 
-Node *Packer::GrowDown(unique_ptr<Node>* root_ptr, int width, int height) {
-    auto& root = *root_ptr;
+Node *Packer::GrowDown(int width, int height) {
     auto newRoot = std::make_unique<Node>
-            (0, 0, root->width, root->height + height);
+            (0, 0, root_->width, root_->height + height);
 
-    newRoot->bitmap = root->bitmap;
+    newRoot->bitmap = root_->bitmap;
     newRoot->down = std::make_unique<Node>
-            (0, root->height, root->width, height);
-    newRoot->right = std::move(root);
+            (0, root_->height, root_->width, height);
+    newRoot->right = std::move(root_);
 
     // Override the root pointer
-    root = std::move(newRoot);
+    root_ = std::move(newRoot);
 
-    if (auto node = FindNode(root, width, height)) {
+    if (auto node = FindNode(root_, width, height)) {
         return SplitNode(node, width, height);
     }
 
     return nullptr;
 }
 
-Node* Packer::GrowNode(unique_ptr<Node>* root_ptr, int width, int height) {
-    auto& root = *root_ptr;
-    auto can_grow_right = height <= root->height;
-    auto can_grow_down = width <= root->width;
+Node* Packer::GrowNode(int width, int height) {
+    auto can_grow_right = height <= root_->height;
+    auto can_grow_down = width <= root_->width;
 
     auto should_grow_right =
-            can_grow_right && root->height >= (root->width + width);
+            can_grow_right && root_->height >= (root_->width + width);
     auto should_grow_down =
-            can_grow_down && root->width >= (root->height + height);
+            can_grow_down && root_->width >= (root_->height + height);
 
-    if (should_grow_right) return GrowRight(root_ptr, width, height);
-    if (should_grow_down) return GrowDown(root_ptr, width, height);
-    if (can_grow_right) return GrowRight(root_ptr, width, height);
-    if (can_grow_down) return GrowDown(root_ptr, width, height);
+    if (should_grow_right) return GrowRight(width, height);
+    if (should_grow_down) return GrowDown(width, height);
+    if (can_grow_right) return GrowRight(width, height);
+    if (can_grow_down) return GrowDown(width, height);
 
     return nullptr;
 }

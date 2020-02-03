@@ -32,13 +32,14 @@ public:
 private:
     vector<Bitmap> bitmaps_ {};
     unique_ptr<Bitmap> spritesheet_;
+    unique_ptr<Node> root_;
 
     Node* FindNode(const unique_ptr<Node>& root, int width, int height);
     Node* SplitNode(Node *node, int width, int height);
 
-    Node* GrowNode(unique_ptr<Node>* root_ptr, int width, int height);
-    Node* GrowRight(unique_ptr<Node>* root_ptr, int width, int height);
-    Node* GrowDown(unique_ptr<Node>* root_ptr, int width, int height);
+    Node* GrowNode(int width, int height);
+    Node* GrowRight(int width, int height);
+    Node* GrowDown(int width, int height);
 
     void GenerateTextureMap(Node* node);
     void GenerateMetadata(Node* node);
