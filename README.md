@@ -14,6 +14,7 @@ This will generate a spritesheet called `sprites.png` and a json sprite map `spr
 
 ## Dependencies
 - FreeImage (http://freeimage.sourceforge.net/)
+- RapidJSON (https://rapidjson.org/)
 
 ## Set up a development environment using Docker
 
