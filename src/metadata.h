@@ -21,6 +21,7 @@ public:
     Metadata() : writer(buffer) {
         writer.StartObject();
         writer.Key("Sprites");
+        writer.StartArray();
     }
 
     void Write(const Node* node);

@@ -9,10 +9,28 @@
 using std::fstream;
 
 void Metadata::Write(const Node* node) {
-    // TODO: write node
+    writer.StartObject();
+
+    writer.Key("name");
+    writer.String(node->bitmap->path());
+
+    writer.Key("x");
+    writer.Int(node->x);
+
+    writer.Key("y");
+    writer.Int(node->y);
+
+    writer.Key("width");
+    writer.Int(node->width);
+
+    writer.Key("height");
+    writer.Int(node->height);
+
+    writer.EndObject();
 }
 
 void Metadata::Save(const string &path) {
+    writer.EndArray();
     writer.EndObject();
 
     std::ofstream file(path);
