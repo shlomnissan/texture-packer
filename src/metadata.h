@@ -13,10 +13,21 @@
 #include "node.h"
 
 using std::string;
+using rapidjson::StringBuffer;
+using rapidjson::PrettyWriter;
 
 class Metadata {
 public:
-    void Write(const Node& node);
+    Metadata() : writer(buffer) {
+        writer.StartObject();
+        writer.Key("Sprites");
+    }
+
+    void Write(const Node* node);
+    void Save(const string& filename);
+private:
+    StringBuffer buffer;
+    PrettyWriter<StringBuffer> writer;
 };
 
 #endif //SRC_METADATA_H_

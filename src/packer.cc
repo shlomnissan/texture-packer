@@ -44,6 +44,7 @@ void Packer::Pack() {
 void Packer::Export(const string& filename) {
     GenerateTextureMap(root_.get());
     spritesheet_->Save(filename + ".png");
+    metadata_.Save(filename + ".json");
 }
 
 void Packer::GenerateTextureMap(Node *node) {
@@ -54,8 +55,7 @@ void Packer::GenerateTextureMap(Node *node) {
     if (node->bitmap != nullptr) {
         // Save image
         spritesheet_->Paste(node->x, node->y, *node->bitmap);
-
-        // TODO: save metadata
+        metadata_.Write(node);
     }
 
     GenerateTextureMap(node->right.get());
