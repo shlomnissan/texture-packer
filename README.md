@@ -2,6 +2,8 @@
 
 A simple command-line spritesheet generator written in C++17.
 
+Open tasks: https://github.com/shlomnissan/texture-packer/projects/1
+
 ## Usage
 ```
 texture_packer FILE_LIST [-o output file]
