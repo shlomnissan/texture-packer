@@ -1,6 +1,6 @@
 # texture-packer 
 
-A simple command-line spritesheet generator written in C++17. It has similar features to the TexturePacker app (texturepacker.com).
+A simple command-line spritesheet generator written in C++17.
 
 ## Usage
 ```
