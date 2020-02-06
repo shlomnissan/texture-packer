@@ -14,6 +14,7 @@ add_executable(texture_packer src/main.cpp
                               src/packer.h
                               src/node.h
                               src/metadata.cc
-                              src/metadata.h src/rectangle.h)
+                              src/metadata.h
+                              src/rectangle.h)
 
 target_link_libraries(texture_packer ${FREEIMAGE_LIBRARY})

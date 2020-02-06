@@ -1,0 +1,9 @@
+dist: trusty
+sudo: false
+language: cpp
+before_install:
+  - apt-get update
+  - apt-get -y install cmake rapidjson-dev libfreeimage3 libfreeimage-dev
+script:
+  - cmake .
+  - cmake --build . -- -j2
