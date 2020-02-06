@@ -1,4 +1,4 @@
-# texture-packer [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+# texture-packer [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) https://travis-ci.com/shlomnissan/texture-packer.svg?branch=master
 
 A simple command-line spritesheet generator written in C++17.
 
