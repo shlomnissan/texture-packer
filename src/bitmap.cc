@@ -16,10 +16,11 @@ Bitmap::Bitmap(string_view source) : path_(source.data()) {
     LoadBitmap(path_);
 }
 
-Bitmap::Bitmap(int width, int height, int bpp)
-    : width_(width),
-      height_(height),
-      bitmap_(FreeImage_Allocate(width, height, bpp)) {}
+Bitmap::Bitmap(unsigned width, unsigned height, unsigned bpp)
+        : bitmap_(FreeImage_Allocate(width, height, bpp)) {
+    width_ = width;
+    height_ = height;
+}
 
 Bitmap::Bitmap(Bitmap &&rhs) noexcept {
     bitmap_ = rhs.bitmap_;
@@ -61,7 +62,7 @@ bool Bitmap::LoadBitmap(string_view src) {
     return false;
 }
 
-bool Bitmap::Paste(int x, int y, const Bitmap &bmp) {
+bool Bitmap::Paste(unsigned x, unsigned y, const Bitmap &bmp) {
     return FreeImage_Paste(bitmap_, bmp.data(), x, y, /* alpha = */ 255);
 }
 

@@ -5,15 +5,14 @@
 
 #include <algorithm>
 
+#include "rectangle.h"
+
 using std::make_unique;
 
 void Packer::Pack() {
     // Sort by max-side descending
-    std::sort(bitmaps_.begin(), bitmaps_.end(),
-              [](const Bitmap& a, const Bitmap& b) -> bool {
-        return std::max(a.width(), a.height())
-             > std::max(b.width(), b.height());
-    });
+    Rectangle::SortMaxSide compare_max_side;
+    std::sort(bitmaps_.begin(), bitmaps_.end(), compare_max_side);
 
     // Create empty root node, sized to fit first bitmap
     root_ = make_unique<Node>(0, 0,

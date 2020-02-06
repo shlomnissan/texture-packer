@@ -10,36 +10,32 @@
 
 #include <FreeImage.h>
 
+#include "rectangle.h"
+
 using std::string;
 using std::string_view;
 
-class Bitmap {
+class Bitmap : public Rectangle {
 public:
     explicit Bitmap(string_view source);
-    Bitmap(int width, int height, int bpp);
+    Bitmap(unsigned width, unsigned height, unsigned bpp);
     Bitmap(Bitmap&& rhs) noexcept;
     Bitmap(const Bitmap& rhs) = delete;  // Delete copy constructor
 
     Bitmap& operator=(Bitmap&& rhs);
     Bitmap& operator=(const Bitmap& rhs) = delete;  // Delete copy assignment
 
-    unsigned width() const { return width_; }
-    unsigned height() const { return height_; }
     const char* path() const { return path_.c_str(); }
     FIBITMAP* data() const { return bitmap_; }
 
     bool LoadBitmap(string_view path);
-    bool Paste(int x, int y, const Bitmap& bmp);
+    bool Paste(unsigned x, unsigned y, const Bitmap& bmp);
     void Save(string_view path);
 
     ~Bitmap();
 
 private:
-    unsigned width_ {0 };
-    unsigned height_ {0 };
-
     string path_;
-
     FIBITMAP* bitmap_ {nullptr };
 };
 
