@@ -19,16 +19,11 @@ using std::string;
 
 class Packer {
 public:
-    Packer() = default;
-
-    void AddBitmap(Bitmap&& bitmap) {
-        bitmaps_.emplace_back(std::move(bitmap));
-    }
-
     int size() const { return bitmaps_.size(); }
 
     void Pack();
     void Export(const string& filename);
+    void AddBitmap(Bitmap&& bitmap);
 
 private:
     vector<Bitmap> bitmaps_ {};

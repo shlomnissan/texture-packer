@@ -26,6 +26,7 @@ public:
 
     void Write(const Node* node);
     void Save(const string& filename);
+
 private:
     StringBuffer buffer;
     PrettyWriter<StringBuffer> writer;

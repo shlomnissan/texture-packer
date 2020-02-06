@@ -21,8 +21,8 @@ struct Node {
     unique_ptr<Node> right;
     unique_ptr<Node> down;
 
-    Node(unsigned x, unsigned y, unsigned w, unsigned h) :
-        x(x), y(y), width(w), height(h) {}
+    Node(unsigned x, unsigned y, unsigned w, unsigned h)
+            : x(x), y(y), width(w), height(h) {}
 };
 
 #endif  // SRC_NODE_

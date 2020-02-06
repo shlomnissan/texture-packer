@@ -46,6 +46,10 @@ void Packer::Export(const string& filename) {
     metadata_.Save(filename + ".json");
 }
 
+void Packer::AddBitmap(Bitmap &&bitmap) {
+    bitmaps_.emplace_back(std::move(bitmap));
+}
+
 void Packer::GenerateTextureMap(Node *node) {
     if (node == nullptr) {
         return;
