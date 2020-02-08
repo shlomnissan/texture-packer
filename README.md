@@ -6,13 +6,20 @@ Open tasks: https://github.com/shlomnissan/texture-packer/projects/1
 
 ## Usage
 ```
-texture_packer FILE_LIST [-o output file]
+texture_packer FILE_LIST [-i input text file] [-o output file]
 ```
-Example:
+### Examples
+1. Without text file list:
 ```
 texture_packer dave_0.png dave_1.png dave_2.png -o sprites
 ```
-This will generate a spritesheet called `sprites.png` and a json sprite map `sprites.json`
+2. With text file list:
+```
+texture_packer sprites.txt -o sprites
+```
+The text file should be *plain text* containing the full path of each file you wish to pack delimited by a new line.
+- - -
+Both examples will generate a spritesheet called `sprites.png` and a json file called `sprites.json`
 
 ## Dependencies
 - FreeImage (http://freeimage.sourceforge.net/)
