@@ -1,6 +1,6 @@
 # texture-packer [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![Build Status](https://travis-ci.com/shlomnissan/texture-packer.svg?branch=master)](https://travis-ci.com/shlomnissan/texture-packer)
 
-A simple command-line spritesheet generator written in C++17.
+A simple command-line spritesheet generator written in C++17. The algorithm will do its best to pack the sprites using as little space possible, but ultimately, no bin packing algorithm is perfect. Feel free to modify it to suit your needs.
 
 Open tasks: https://github.com/shlomnissan/texture-packer/projects/1
 
@@ -18,8 +18,39 @@ texture_packer dave_0.png dave_1.png dave_2.png -o sprites
 texture_packer sprites.txt -o sprites
 ```
 The text file should be *plain text* containing the full path of each file you wish to pack delimited by a new line.
-- - -
+
+### Output
+
 Both examples will generate a spritesheet called `sprites.png` and a json file called `sprites.json`
+
+`sprites.png`
+
+![sprites](https://user-images.githubusercontent.com/3165988/74093487-90e21f00-4a87-11ea-8066-d157b46edaa2.png)
+
+`sprites.json`
+
+```
+{
+    "sprites": [
+        {
+            "name": "assets/red-diamond.png",
+            "x": 96,
+            "y": 0,
+            "width": 28,
+            "height": 20
+        },
+        {
+            "name": "assets/dave-head.png",
+            "x": 96,
+            "y": 20,
+            "width": 28,
+            "height": 24
+        },
+        {
+        ...
+    ]
+}
+```
 
 ## Dependencies
 - FreeImage (http://freeimage.sourceforge.net/)
