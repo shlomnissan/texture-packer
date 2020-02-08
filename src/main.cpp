@@ -3,40 +3,57 @@
 
 #include <iostream>
 #include <string>
+#include <fstream>
 
 #include "packer.h"
 
-const char kDefaultFilename[] { "spritesheet" };
-
 void show_tip() {
     std::cout << "[Usage]\n"
-              << "\ttexture_packer FILE_LIST [-o output file]\n";
+              << "\ttexture_packer FILE_LIST [-i input text file] [-o output file]\n";
+}
+
+void create_bitmap_move_to_pack(Packer* packer_ptr, const std::string& src) {
+    Packer& packer = *packer_ptr;
+    Bitmap bitmap { src };
+    packer.AddBitmap(std::move(bitmap));
+}
+
+void load_bitmaps_from_text_file(Packer* packer_ptr, const std::string& src) {
+    std::fstream file { src };
+    if (file.fail()) {
+        throw std::runtime_error("Unable to open text file " + src);
+    }
+    std::string buffer;
+    while (std::getline(file, buffer)) {
+        create_bitmap_move_to_pack(packer_ptr, buffer);
+    }
 }
 
 void process_arguments(int argc, char* argv[]) {
     auto failed { false };
-    std::string filename { kDefaultFilename };  // Default filename
+    std::string filename { "spritesheet" };  // Init with default filename
     Packer packer;
 
-    for (int i = 0; i < argc; ++i) {
-        auto value { argv[i] };
-        if (value[0] == '-') {
-            switch (std::tolower(value[1])) {
-                case 'o':
-                    // Override filename
-                    filename = argv[++i];
-                    break;
-            }
-        } else {
-            try {
-                // Create bitmaps and move them to the packer
-                Bitmap bitmap { argv[i] };
-                packer.AddBitmap(std::move(bitmap));
-            } catch (std::runtime_error& e) {
-                failed = true;
-                std::cerr << e.what() << '\n';
+    try {
+        for (int i = 0; i < argc; ++i) {
+            auto value{argv[i]};
+            if (value[0] == '-') {
+                switch (std::tolower(value[1])) {
+                    case 'o':  // [-o: output] override default filename
+                        filename = argv[++i];
+                        break;
+                    case 'i': // [-i: input] load bitmaps from text file
+                        load_bitmaps_from_text_file(&packer, argv[++i]);
+                        break;
+                }
+            } else {
+                // If there's no flag, assume image src file
+                create_bitmap_move_to_pack(&packer, argv[i]);
             }
         }
+    } catch (const std::runtime_error& e) {
+        failed = true;
+        std::cerr << e.what() << '\n';
     }
 
     if (failed) {

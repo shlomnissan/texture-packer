@@ -19,10 +19,11 @@ class Bitmap : public Rectangle {
 public:
     explicit Bitmap(string_view source);
     Bitmap(unsigned width, unsigned height, unsigned bpp);
-    Bitmap(Bitmap&& rhs) noexcept;
-    Bitmap(const Bitmap& rhs) = delete;  // Delete copy constructor
 
+    Bitmap(Bitmap&& rhs) noexcept;
     Bitmap& operator=(Bitmap&& rhs);
+
+    Bitmap(const Bitmap& rhs) = delete;  // Delete copy constructor
     Bitmap& operator=(const Bitmap& rhs) = delete;  // Delete copy assignment
 
     const char* path() const { return path_.c_str(); }

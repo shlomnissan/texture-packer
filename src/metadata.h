@@ -20,7 +20,7 @@ class Metadata {
 public:
     Metadata() : writer(buffer) {
         writer.StartObject();
-        writer.Key("Sprites");
+        writer.Key("sprites");
         writer.StartArray();
     }
 
