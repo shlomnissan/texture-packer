@@ -12,7 +12,7 @@ using std::make_unique;
 void Packer::Pack() {
     // Sort by max-side descending
     Rectangle::SortMaxSide compare_max_side;
-    std::sort(bitmaps_.begin(), bitmaps_.end(), compare_max_side);
+    std::stable_sort(bitmaps_.begin(), bitmaps_.end(), compare_max_side);
 
     // Create empty root node, sized to fit first bitmap
     root_ = make_unique<Node>(0, 0,
