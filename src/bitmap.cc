@@ -6,6 +6,7 @@
 #include <experimental/filesystem>
 
 #include <iostream>
+#include <utility>
 
 namespace fs = std::experimental::filesystem;
 
@@ -17,18 +18,16 @@ Bitmap::Bitmap(string_view source) : path_(source.data()) {
 }
 
 Bitmap::Bitmap(unsigned width, unsigned height, unsigned bpp)
-        : bitmap_(FreeImage_Allocate(width, height, bpp)) {
-    width_ = width;
-    height_ = height;
+    : bitmap_(FreeImage_Allocate(width, height, bpp)) {
+      width_ = width;
+      height_ = height;
 }
 
-Bitmap::Bitmap(Bitmap &&rhs) noexcept {
-    bitmap_ = rhs.bitmap_;
-    path_ = rhs.path_;
-    width_ = rhs.width_;
-    height_ = rhs.height_;
-
-    rhs.bitmap_ = nullptr;
+Bitmap::Bitmap(Bitmap &&rhs) noexcept
+    : bitmap_(std::exchange(rhs.bitmap_, nullptr)),
+      path_(std::move(rhs.path_)) {
+      width_ = rhs.width_;
+      height_ = rhs.height_;
 }
 
 Bitmap &Bitmap::operator=(Bitmap &&rhs) {
@@ -36,13 +35,10 @@ Bitmap &Bitmap::operator=(Bitmap &&rhs) {
         if (bitmap_) {
             FreeImage_Unload(bitmap_);
         }
-
-        bitmap_ = rhs.bitmap_;
-        path_ = rhs.path_;
+        bitmap_ = std::exchange(rhs.bitmap_, nullptr);
+        path_ = std::move(rhs.path_);
         width_ = rhs.width_;
         height_ = rhs.height_;
-
-        rhs.bitmap_ = nullptr;
     }
     return *this;
 }
@@ -74,5 +70,4 @@ Bitmap::~Bitmap() {
     if (!bitmap_) return;
 
     FreeImage_Unload(bitmap_);
-    bitmap_ = nullptr;
 }
