@@ -16,6 +16,7 @@ matrix:
             - rapidjson-dev
             - libfreeimage3
             - libfreeimage-dev
+            - libgflags-dev
       env:
         - MATRIX_EVAL="CC=clang-9 && CXX=clang++-9"
         - LINKER_FLAGS=""
