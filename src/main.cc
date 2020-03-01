@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include "gflags/gflags.h"
 
 #include "packer.h"
 

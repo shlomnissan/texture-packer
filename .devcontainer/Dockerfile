@@ -19,7 +19,7 @@ RUN apt-get update \
     && apt-get -y install build-essential cmake cppcheck valgrind curl wget software-properties-common \
     #
     # Install system dependencies
-    && apt-get -y install rapidjson-dev libfreeimage3 libfreeimage-dev \
+    && apt-get -y install rapidjson-dev libfreeimage3 libfreeimage-dev libgflags-dev \
     #
     # Create a non-root user to use if preferred - see https://aka.ms/vscode-remote/containers/non-root-user.
     && groupadd --gid $USER_GID $USERNAME \
