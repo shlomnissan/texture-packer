@@ -3,12 +3,11 @@
 
 #include "bitmap.h"
 
-#include <experimental/filesystem>
-
+#include <filesystem>
 #include <iostream>
 #include <utility>
 
-namespace fs = std::experimental::filesystem;
+namespace fs = std::filesystem;
 
 Bitmap::Bitmap(string_view source) : path_(source.data()) {
     if (!fs::exists(path_)) {

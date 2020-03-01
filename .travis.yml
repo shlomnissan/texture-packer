@@ -8,13 +8,16 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
+            - llvm-toolchain-bionic-9
           packages:
-            - g++-7
+            - clang-9
+            - libc++-9-dev
+            - libc++abi-9-dev
             - rapidjson-dev
             - libfreeimage3
             - libfreeimage-dev
       env:
-        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+        - MATRIX_EVAL="CC=clang-9 && CXX=clang++-9"
         - LINKER_FLAGS=""
 before_install:
   - eval "${MATRIX_EVAL}"
