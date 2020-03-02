@@ -6,14 +6,9 @@ Open tasks: https://github.com/shlomnissan/texture-packer/projects/1
 
 ## Usage
 ```
-texture_packer FILE_LIST [-i input text file] [-o output file]
+texture_packer -i [text file input] -o[output file name]
 ```
-### Examples
-1. Without text file list:
-```
-texture_packer dave_0.png dave_1.png dave_2.png -o sprites
-```
-2. With text file list:
+### Example
 ```
 texture_packer sprites.txt -o sprites
 ```
@@ -21,7 +16,7 @@ The text file should be *plain text* containing the full path of each file you w
 
 ### Output
 
-Both examples will generate a spritesheet called `sprites.png` and a json file called `sprites.json`
+Texture packer will generate a texture map `sprites.png` and a json file called `sprites.json`:
 
 `sprites.png`
 

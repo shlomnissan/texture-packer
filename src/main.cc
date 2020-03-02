@@ -8,76 +8,48 @@
 
 #include "packer.h"
 
-void show_tip() {
-    std::cout << "[Usage]\n"
-              << "\ttexture_packer FILE_LIST [-i input text file] [-o output file]\n";
-}
+DEFINE_string(i, "", "text file input");
+DEFINE_string(o, "spritesheet", "output filename");
 
-void create_bitmap_move_to_pack(Packer* packer_ptr, const std::string& src) {
-    Packer& packer = *packer_ptr;
-    Bitmap bitmap { src };
-    packer.AddBitmap(std::move(bitmap));
-}
-
-void load_bitmaps_from_text_file(Packer* packer_ptr, const std::string& src) {
-    std::fstream file { src };
-    if (file.fail()) {
-        throw std::runtime_error("Unable to open text file " + src);
+DEFINE_validator(i, [](const char *flag, const std::string& value) -> bool {
+    if (value[0] == '\0') {
+        // input file wasn't provided
+        std::cerr << "You must provide a text file input\n";
+        return false;
     }
-    std::string buffer;
-    while (std::getline(file, buffer)) {
-        create_bitmap_move_to_pack(packer_ptr, buffer);
-    }
-}
+    return true;
+});
 
-void process_arguments(int argc, char* argv[]) {
-    auto failed { false };
-    std::string filename { "spritesheet" };  // Init with default filename
+void start_packing() {
     Packer packer;
 
-    try {
-        for (int i = 0; i < argc; ++i) {
-            auto value{argv[i]};
-            if (value[0] == '-') {
-                switch (std::tolower(value[1])) {
-                    case 'o':  // [-o: output] override default filename
-                        filename = argv[++i];
-                        break;
-                    case 'i': // [-i: input] load bitmaps from text file
-                        load_bitmaps_from_text_file(&packer, argv[++i]);
-                        break;
-                }
-            } else {
-                // If there's no flag, assume image src file
-                create_bitmap_move_to_pack(&packer, argv[i]);
-            }
-        }
-    } catch (const std::runtime_error& e) {
-        failed = true;
-        std::cerr << e.what() << '\n';
+    // open text file
+    std::fstream file { FLAGS_i };
+    if (file.fail()) {
+        throw std::runtime_error("Unable to open text file " + FLAGS_i);
     }
 
-    if (failed) {
-        std::cerr << "Failed to open file(s)\n";
-        return;
+    // read file and load bitmaps
+    std::string buffer;
+    while (std::getline(file, buffer)) {
+        packer.AddBitmap(std::move(Bitmap(buffer)));
     }
 
-    if (packer.size() == 0) {
-        std::cerr << "No textures to pack\n\n";
-        show_tip();
-        return;
-    }
-
+    // generate texture map
     packer.Pack();
-    packer.Export(filename);
+
+    // export files 
+    packer.Export(FLAGS_o);
 }
 
 int main(int argc, char* argv[]) {
-    if (argc == 1) {
-        show_tip();
-    } else if (argc >= 2) {
-        process_arguments(--argc, ++argv);
-    }
+    gflags::SetUsageMessage("texture_packer -i [text file input] -o[output file name]");
+    gflags::SetVersionString("1.0.0");
+    gflags::ParseCommandLineFlags(&argc, &argv, true);
+
+    start_packing();
+
+    gflags::ShutDownCommandLineFlags();
 
     return EXIT_SUCCESS;
 }
