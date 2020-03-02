@@ -58,7 +58,8 @@ Both examples will generate a spritesheet called `sprites.png` and a json file c
 - gflags (https://github.com/gflags/gflags)
 
 ## Development 
-This project is configured to run in VSCode from within a container using [Microsoft's Remote Containers plugin](https://code.visualstudio.com/docs/remote/containers). If this plugin is installed, opening this project in VSCode will automatically prompt you to install the development container and all the necessary dependencies. See `.devcontainer` folder for Docker's container configurations..
+- Run `git submodule update --init` after cloning the repository to install dependencies. 
+- This project is configured to run in VSCode from within a container using [Microsoft's Remote Containers plugin](https://code.visualstudio.com/docs/remote/containers). If this plugin is installed, opening this project in VSCode will automatically prompt you to install the development container and all the necessary dependencies. See `.devcontainer` folder for Docker's container configurations.
 
 ## MIT license:	
 

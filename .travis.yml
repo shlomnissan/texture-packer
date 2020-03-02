@@ -16,12 +16,12 @@ matrix:
             - rapidjson-dev
             - libfreeimage3
             - libfreeimage-dev
-            - libgflags-dev
       env:
         - MATRIX_EVAL="CC=clang-9 && CXX=clang++-9"
         - LINKER_FLAGS=""
 before_install:
   - eval "${MATRIX_EVAL}"
+  - git submodule update --init --recursive
 
 script:
   - cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXE_LINKER_FLAGS=${LINKER_FLAGS} .
