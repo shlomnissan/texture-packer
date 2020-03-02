@@ -7,8 +7,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(FREEIMAGE_LIBRARY /usr/lib/x86_64-linux-gnu/libfreeimage.so)
 
-if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/libs/gflags)
-    add_subdirectory(libs/gflags)
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lib/gflags/CMakeLists.txt)
+    add_subdirectory(lib/gflags)
 else ()
     message(SEND_ERROR "Run 'git submodule update --init'")
 endif ()

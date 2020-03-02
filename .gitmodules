@@ -1,3 +1,3 @@
-[submodule "libs/gflags"]
-	path = libs/gflags
-	url = https://github.com/gflags/gflags
+[submodule "lib/gflags"]
+	path = lib/gflags
+	url = https://github.com/gflags/gflags.git

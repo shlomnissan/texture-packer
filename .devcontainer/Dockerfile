@@ -1,4 +1,7 @@
-FROM ubuntu:18.04
+FROM debian:10.3-slim
+
+# Avoid warnings by switching to noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 # This Dockerfile adds a non-root user with sudo access. Use the "remoteUser"
 # property in devcontainer.json to use it. On Linux, the container user's GID/UIDs
@@ -28,12 +31,15 @@ RUN apt-get update \
     && apt-get install -y sudo \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
     && chmod 0440 /etc/sudoers.d/$USERNAME
-    #
-    # Install LLVM/Clang
-    RUN bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)" \
+
+# Install LLVM/Clang
+RUN bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)" \
     && apt-get -y install libc++-9-dev libc++abi-9-dev
-    #
-    # Clean up
-    RUN apt-get autoremove -y \
+
+# Clean up
+RUN apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
+
+# Switch back to dialog for any ad-hoc use of apt-get
+ENV DEBIAN_FRONTEND=dialog
