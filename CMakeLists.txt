@@ -5,6 +5,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
 
 set(CMAKE_CXX_STANDARD 17)
 
+# Add dependencies
+# ------------------------------------------
+
 set(FREEIMAGE_LIBRARY /usr/lib/x86_64-linux-gnu/libfreeimage.so)
 
 if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lib/gflags/CMakeLists.txt)
@@ -12,6 +15,15 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lib/gflags/CMakeLists.txt)
 else ()
     message(SEND_ERROR "Run 'git submodule update --init'")
 endif ()
+
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lib/googletest/CMakeLists.txt)
+    add_subdirectory(lib/googletest)
+else ()
+    message(SEND_ERROR "Run 'git submodule update --init'")
+endif ()
+
+# Include project files 
+# ------------------------------------------
 
 set(HEADER src/bitmap.h
             src/packer.h
